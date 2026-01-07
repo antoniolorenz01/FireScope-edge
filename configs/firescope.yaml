@@ -1,0 +1,30 @@
+app:
+  host: "0.0.0.0"
+  port: 8000
+
+runtime:
+  backend: "onnx"          # "onnx" | "pt" | "auto"
+  weights_path: "models/best.onnx"
+  imgsz: 640
+  device: "cpu"            # "cpu" | "cuda" (if available)
+
+camera:
+  source: 0                # int for USB cam, or RTSP URL string
+  width: 320
+  height: 320
+  mjpeg: false
+
+thresholds:
+  conf_smoke: 0.40
+  conf_fire: 0.35
+  iou: 0.70
+  min_area: 0.002
+
+temporal_filter:
+  m: 10
+  n_fire: 3
+  n_smoke: 5
+  cooldown_s: 15.0
+
+storage:
+  snapshots_dir: "data/snapshots"
