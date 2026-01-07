@@ -1,0 +1,99 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pyre/
+.pytype/
+ruff_cache/
+*.log
+
+# -------------------------
+# Poetry
+# -------------------------
+.poetry/
+poetry.lock
+
+# -------------------------
+# Virtual environments
+# -------------------------
+.venv/
+venv/
+ENV/
+env/
+.env
+.env.*
+*.env
+
+# -------------------------
+# OS / Editor
+# -------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# -------------------------
+# Jupyter
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# Project-specific
+# -------------------------
+# Local configs / secrets
+configs/*.local.yaml
+configs/*.local.yml
+configs/*.secret.yaml
+configs/*.secret.yml
+
+# Model artifacts
+models/
+*.onnx
+*.engine
+*.pt
+*.pth
+
+# Runtime output
+data/
+snapshots/
+alerts/
+runs/
+outputs/
+
+# Videos / images
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+# -------------------------
+# System / deployment
+# -------------------------
+*.service.bak
+*.env.bak

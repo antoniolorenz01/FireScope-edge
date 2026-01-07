@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "firescope-edge"
+version = "0.1.0"
+description = ""
+authors = ["antoniolorenz01 <antoniogarcia281100@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+fastapi = "*"
+uvicorn = { version = "*", extras = ["standard"] }
+pydantic = "*"
+pyyaml = "*"
+onnxruntime = "*"
+numpy = "<2.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
