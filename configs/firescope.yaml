@@ -5,14 +5,14 @@ app:
 runtime:
   backend: "onnx"          # "onnx" | "pt" | "auto"
   weights_path: "models/best.onnx"
-  imgsz: 640
+  imgsz: 320
   device: "cpu"            # "cpu" | "cuda" (if available)
 
 camera:
   source: 0                # int for USB cam, or RTSP URL string
   width: 320
   height: 320
-  mjpeg: false
+  mjpeg: true
 
 thresholds:
   conf_smoke: 0.40
