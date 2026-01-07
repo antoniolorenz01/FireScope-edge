@@ -1,12 +1,27 @@
 from fastapi import FastAPI
 
 from app.config import load_settings
+from app.runtime import EdgeRuntime
 
 app = FastAPI(title="FireScope Edge", version="0.1.0")
 
 settings = load_settings()
+runtime = EdgeRuntime(
+    camera_source=settings.camera.source,
+    width=settings.camera.width,
+    height=settings.camera.height,
+    mjpeg=settings.camera.mjpeg,
+)
 
-_state = {"model_loaded": False, "camera_ok": False}
+
+@app.on_event("startup")
+def on_startup() -> None:
+    runtime.start()
+
+
+@app.on_event("shutdown")
+def on_shutdown() -> None:
+    runtime.stop()
 
 
 @app.get("/health")
@@ -16,20 +31,13 @@ def health():
 
 @app.get("/ready")
 def ready():
-    ready_flag = _state["model_loaded"] and _state["camera_ok"]
-    return {"ready": ready_flag, **_state}
-
-
-@app.get("/config")
-def get_config():
+    s = runtime.state
+    ready_flag = s.model_loaded and s.camera_ok
     return {
-        "app": settings.app.__dict__,
-        "runtime": settings.runtime.__dict__,
-        "camera": {
-            **settings.camera.__dict__,
-            "source_type": type(settings.camera.source).__name__,
-        },
-        "thresholds": settings.thresholds.__dict__,
-        "temporal_filter": settings.temporal_filter.__dict__,
-        "storage": settings.storage.__dict__,
+        "ready": ready_flag,
+        "running": s.running,
+        "model_loaded": s.model_loaded,
+        "camera_ok": s.camera_ok,
+        "fps": s.fps,
+        "last_error": s.last_error,
     }

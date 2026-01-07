@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pydantic
+pyyaml
+onnxruntime
+numpy<2.3
