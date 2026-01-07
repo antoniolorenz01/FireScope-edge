@@ -19,6 +19,7 @@ runtime = EdgeRuntime(
     conf_smoke=settings.thresholds.conf_smoke,
     conf_fire=settings.thresholds.conf_fire,
     iou=settings.thresholds.iou,
+    min_area=settings.thresholds.min_area,
 )
 
 
@@ -48,6 +49,8 @@ def ready():
         "camera_ok": s.camera_ok,
         "fps": s.fps,
         "last_error": s.last_error,
+        "smoke_count": s.smoke_count,
+        "fire_count": s.fire_count,
     }
 
 

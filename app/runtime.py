@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 from app.vision import preprocess_bgr_to_nchw_float
 from app.postprocess import parse_ultralytics_onnx_outputs, Detection
+from app.geometry import map_letterbox_xyxy_to_original, filter_by_min_area_ratio
 
 @dataclass
 class RuntimeState:
@@ -38,6 +39,7 @@ class EdgeRuntime:
         conf_smoke: float,
         conf_fire: float,
         iou: float,
+        min_area: float,
     ) -> None:
         self._camera_source = camera_source
         self._width = width
@@ -55,6 +57,7 @@ class EdgeRuntime:
         self._conf_smoke = conf_smoke
         self._conf_fire = conf_fire
         self._iou = iou
+        self._min_area = min_area
 
     def start(self) -> None:
         if self._thread and self._thread.is_alive():
@@ -149,9 +152,10 @@ class EdgeRuntime:
             if self._model is not None:
                 try:
                     t_infer0 = time.perf_counter()
+                    preprocess_result = preprocess_bgr_to_nchw_float(_frame, self._imgsz)
                     outputs = self._model.session.run(
                         None,
-                        {self._model.input_name: preprocess_bgr_to_nchw_float(_frame, self._imgsz).blob},
+                        {self._model.input_name: preprocess_result.blob},
                     )
                     self.state.last_infer_ms = (time.perf_counter() - t_infer0) * 1000.0
                     self.state.last_outputs = len(outputs)
@@ -163,9 +167,22 @@ class EdgeRuntime:
                         conf_fire=self._conf_fire,
                         iou_th=self._iou,
                     )
-                    self.state.smoke_count = sum(1 for d in detections if d.cls == 0)
-                    self.state.fire_count = sum(1 for d in detections if d.cls == 1)
-                    self.state.last_detections = detections
+                    # Mapear a espacio original
+                    mapped = map_letterbox_xyxy_to_original(
+                        detections,
+                        scale=preprocess_result.scale,
+                        pad=preprocess_result.pad,
+                        orig_shape_hw=(_frame.shape[0], _frame.shape[1]),
+                    )
+                    # Filtrar por área mínima
+                    filtered = filter_by_min_area_ratio(
+                        mapped,
+                        orig_shape_hw=(_frame.shape[0], _frame.shape[1]),
+                        min_area_ratio=self._min_area,
+                    )
+                    self.state.smoke_count = sum(1 for d in filtered if d.cls == 0)
+                    self.state.fire_count = sum(1 for d in filtered if d.cls == 1)
+                    self.state.last_detections = filtered
                 except Exception as e:
                     self.state.last_error = f"Inference failed: {e!r}"
 
