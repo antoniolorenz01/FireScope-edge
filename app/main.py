@@ -24,6 +24,7 @@ runtime = EdgeRuntime(
     n_fire=settings.temporal_filter.n_fire,
     n_smoke=settings.temporal_filter.n_smoke,
     cooldown_s=settings.temporal_filter.cooldown_s,
+    alerts_dir=getattr(settings.storage, 'alerts_dir', 'data/alerts'),
 )
 
 
@@ -40,6 +41,15 @@ def on_shutdown() -> None:
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/alerts/latest")
+def alerts_latest():
+    meta = runtime._alerts.latest()
+    return meta.__dict__ if meta else None
+
+@app.get("/alerts")
+def alerts_list():
+    return [m.__dict__ for m in runtime._alerts.recent()]
 
 
 @app.get("/ready")
