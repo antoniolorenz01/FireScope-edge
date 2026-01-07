@@ -20,6 +20,10 @@ runtime = EdgeRuntime(
     conf_fire=settings.thresholds.conf_fire,
     iou=settings.thresholds.iou,
     min_area=settings.thresholds.min_area,
+    m=settings.temporal_filter.m,
+    n_fire=settings.temporal_filter.n_fire,
+    n_smoke=settings.temporal_filter.n_smoke,
+    cooldown_s=settings.temporal_filter.cooldown_s,
 )
 
 
@@ -51,6 +55,11 @@ def ready():
         "last_error": s.last_error,
         "smoke_count": s.smoke_count,
         "fire_count": s.fire_count,
+        "fire_hits": s.fire_hits,
+        "smoke_hits": s.smoke_hits,
+        "fire_triggered": s.fire_triggered,
+        "smoke_triggered": s.smoke_triggered,
+        "cooldown_remaining_s": s.cooldown_remaining_s,
     }
 
 
