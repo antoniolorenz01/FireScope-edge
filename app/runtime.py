@@ -53,7 +53,8 @@ class EdgeRuntime:
         n_fire: int,
         n_smoke: int,
         cooldown_s: float,
-        alerts_dir: str,
+    alerts_dir: str,
+    telegram: Optional[object] = None,
     ) -> None:
         self._camera_source = camera_source
         self._width = width
@@ -74,7 +75,7 @@ class EdgeRuntime:
         self._min_area = min_area
 
         self._temporal = TemporalFilter(m=m, n_fire=n_fire, n_smoke=n_smoke, cooldown_s=cooldown_s)
-        self._alerts = AlertManager(base_dir=alerts_dir, keep_last=50)
+        self._alerts = AlertManager(base_dir=alerts_dir, keep_last=50, telegram=telegram)
         self._cooldown_s = float(cooldown_s)
         self._model_path = str(weights_path)
 

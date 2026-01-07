@@ -1,13 +1,22 @@
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 
+import os
 from app.config import load_settings
 from app.runtime import EdgeRuntime
 from app.streaming import mjpeg_generator
+from app.notifiers.telegram import TelegramNotifier, telegram_config_from_env
 
 app = FastAPI(title="FireScope Edge", version="0.1.0")
 
 settings = load_settings()
+
+# Crear notifier de Telegram si está habilitado
+telegram = None
+if os.environ.get("TELEGRAM_ENABLED", "0") == "1":
+    telegram_cfg = telegram_config_from_env(send_photo=True)
+    telegram = TelegramNotifier(telegram_cfg)
+
 runtime = EdgeRuntime(
     camera_source=settings.camera.source,
     width=settings.camera.width,
@@ -25,6 +34,7 @@ runtime = EdgeRuntime(
     n_smoke=settings.temporal_filter.n_smoke,
     cooldown_s=settings.temporal_filter.cooldown_s,
     alerts_dir=getattr(settings.storage, 'alerts_dir', 'data/alerts'),
+    telegram=telegram,
 )
 
 
