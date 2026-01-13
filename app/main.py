@@ -1,7 +1,15 @@
+
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 
 import os
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from app.config import load_settings
 from app.runtime import EdgeRuntime
 from app.streaming import mjpeg_generator

@@ -9,14 +9,14 @@ runtime:
   device: "cpu"            # "cpu" | "cuda" (if available)
 
 camera:
-  source: 0                # int for USB cam, or RTSP URL string
+  source: 2                # int for USB cam, or RTSP URL string
   width: 320
   height: 320
   mjpeg: true
 
 thresholds:
   conf_smoke: 0.40
-  conf_fire: 0.35
+  conf_fire: 0.20
   iou: 0.70
   min_area: 0.002
 
