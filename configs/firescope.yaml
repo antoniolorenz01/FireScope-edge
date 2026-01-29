@@ -9,7 +9,7 @@ runtime:
   device: "cpu"            # "cpu" | "cuda" (if available)
 
 camera:
-  source: 2                # int for USB cam, or RTSP URL string
+  source: 0                # int for USB cam, or RTSP URL string
   width: 320
   height: 320
   mjpeg: true
@@ -27,4 +27,4 @@ temporal_filter:
   cooldown_s: 15.0
 
 storage:
-  snapshots_dir: "data/snapshots"
+  alerts_dir: "data/alerts"

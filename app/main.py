@@ -41,7 +41,7 @@ runtime = EdgeRuntime(
     n_fire=settings.temporal_filter.n_fire,
     n_smoke=settings.temporal_filter.n_smoke,
     cooldown_s=settings.temporal_filter.cooldown_s,
-    alerts_dir=getattr(settings.storage, 'alerts_dir', 'data/alerts'),
+    alerts_dir=settings.storage.alerts_dir,
     telegram=telegram,
 )
 

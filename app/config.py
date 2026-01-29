@@ -47,7 +47,7 @@ class TemporalFilterConfig:
 
 @dataclass(frozen=True)
 class StorageConfig:
-    snapshots_dir: str
+    alerts_dir: str
 
 
 @dataclass(frozen=True)
@@ -68,11 +68,15 @@ def load_settings(path: str = "configs/firescope.yaml") -> Settings:
     with cfg_path.open("r", encoding="utf-8") as f:
         raw = yaml.safe_load(f)
 
+    storage_raw = raw.get("storage") or {}
+    # Backwards compatibility: older configs used `snapshots_dir` for alert output.
+    alerts_dir = storage_raw.get("alerts_dir") or storage_raw.get("snapshots_dir") or "data/alerts"
+
     return Settings(
         app=AppConfig(**raw["app"]),
         runtime=RuntimeConfig(**raw["runtime"]),
         camera=CameraConfig(**raw["camera"]),
         thresholds=ThresholdsConfig(**raw["thresholds"]),
         temporal_filter=TemporalFilterConfig(**raw["temporal_filter"]),
-        storage=StorageConfig(**raw["storage"]),
+        storage=StorageConfig(alerts_dir=str(alerts_dir)),
     )
